@@ -1,6 +1,6 @@
 package org.example
 
-abstract class LibraryItem(var id: Int, var name: String, val accessible: Boolean) {
+abstract class LibraryItem(var id: Int, var name: String, var accessible: Boolean) {
     fun getOneLineInfo(): String = "$name | Доступность: ${if (accessible) "да" else "нет"}"
     abstract fun getInfo(): String
 }
@@ -30,6 +30,7 @@ class LibraryManager(val libraryItemList: MutableList<LibraryItem>) {
             3 -> libraryItemList.filterIsInstance<Disk>().forEach({ println(it.getInfo()) })
         }
     }
+
 }
 
 fun main() {
