@@ -6,24 +6,54 @@ abstract class LibraryItem(var id: Int, var name: String, var accessible: Boolea
 }
 
 class Book(id: Int, name: String, accessible: Boolean, private var numberOfPages: Int, private var author: String) :
-    LibraryItem(id, name, accessible) {
+    LibraryItem(id, name, accessible), Borrowable, ReadableInLibrary, Returnable {
     override fun getInfo(): String =
         "Книга: $name ($numberOfPages стр.) автора: $author с id: $id | Доступность: ${if (accessible) "да" else "нет"}"
+
+    override fun borrowItem(): String {
+        TODO("Реализация borrow()")
+    }
+
+    override fun readInLibrary(): String {
+        TODO("Реализация readInLibrary()")
+    }
+
+    override fun returnItem() : String {
+        TODO("Реализация returnItem()")
+    }
+
 }
 
 class Newspaper(id: Int, name: String, accessible: Boolean, private var issueNumber: Int) :
-    LibraryItem(id, name, accessible) {
+    LibraryItem(id, name, accessible), ReadableInLibrary, Returnable {
     override fun getInfo(): String =
         "Выпуск: $issueNumber газеты $name с id: $id | Доступность: ${if (accessible) "да" else "нет"}"
+
+    override fun readInLibrary(): String {
+        TODO("Реализация readInLibrary()")
+    }
+
+    override fun returnItem() : String {
+        TODO("Реализация returnItem()")
+    }
 }
 
-class Disk(id: Int, name: String, accessible: Boolean, private var type: Int) : LibraryItem(id, name, accessible) {
+class Disk(id: Int, name: String, accessible: Boolean, private var type: Int) :
+    LibraryItem(id, name, accessible), Borrowable, Returnable {
     override fun getInfo(): String =
         "${if (type == 0) "CD" else "DVD"} $name | Доступность: ${if (accessible) "да" else "нет"}"
+
+    override fun borrowItem(): String {
+        TODO("Реализация borrowItem()")
+    }
+
+    override fun returnItem() : String {
+        TODO("Реализация returnItem()")
+    }
 }
 
 interface Borrowable {
-    fun takeHome() : String
+    fun borrowItem() : String
 }
 
 interface ReadableInLibrary {
@@ -33,6 +63,7 @@ interface ReadableInLibrary {
 interface Returnable {
     fun returnItem() : String
 }
+
 class LibraryManager(val libraryItemList: MutableList<LibraryItem>) {
     fun printList(type: Int) {
         when (type) {
@@ -41,9 +72,6 @@ class LibraryManager(val libraryItemList: MutableList<LibraryItem>) {
             3 -> libraryItemList.filterIsInstance<Disk>().forEach({ println(it.getInfo()) })
         }
     }
-
-
-
 }
 
 fun main() {
@@ -80,6 +108,7 @@ fun main() {
                         "3 - Показать подробную информацию\n" +
                         "4 - Вернуть\n" +
                         "5 - Выйти")
+                        TODO("Остальная логика + сделать краше!!!")
                 }
 
             }
