@@ -3,6 +3,26 @@ package org.example
 abstract class LibraryItem(var id: Int, var name: String, var accessible: Boolean) {
     fun getOneLineInfo(): String = "$name | Доступность: ${if (accessible) "да" else "нет"}"
     abstract fun getInfo(): String
+
+    protected fun toggleAccessibility(successMessage: String, failureMessage: String) {
+        if (accessible) {
+            println(successMessage)
+            accessible = false
+        }
+        else {
+            println(failureMessage)
+        }
+    }
+
+    protected fun marksAsAccessible(successMessage: String, failureMessage: String) {
+        if (!accessible) {
+            println(successMessage)
+            accessible = true
+        }
+        else {
+            println(failureMessage)
+        }
+    }
 }
 
 class Book(id: Int, name: String, accessible: Boolean, private var numberOfPages: Int, private var author: String) :
@@ -10,16 +30,16 @@ class Book(id: Int, name: String, accessible: Boolean, private var numberOfPages
     override fun getInfo(): String =
         "Книга: $name ($numberOfPages стр.) автора: $author с id: $id | Доступность: ${if (accessible) "да" else "нет"}"
 
-    override fun borrowItem(): String {
-        TODO("Реализация borrow()")
+    override fun borrowItem() {
+        toggleAccessibility("Книга $name взята домой", "Книга $name уже на руках")
     }
 
-    override fun readInLibrary(): String {
-        TODO("Реализация readInLibrary()")
+    override fun readInLibrary() {
+        toggleAccessibility("Книга $name взята в читальный зал", "Книга $name уже на руках")
     }
 
-    override fun returnItem() : String {
-        TODO("Реализация returnItem()")
+    override fun returnItem() {
+        marksAsAccessible("Книга $name возвращена в библиотеку", "Книга $name уже в библиотеке")
     }
 
 }
@@ -29,11 +49,11 @@ class Newspaper(id: Int, name: String, accessible: Boolean, private var issueNum
     override fun getInfo(): String =
         "Выпуск: $issueNumber газеты $name с id: $id | Доступность: ${if (accessible) "да" else "нет"}"
 
-    override fun readInLibrary(): String {
+    override fun readInLibrary() {
         TODO("Реализация readInLibrary()")
     }
 
-    override fun returnItem() : String {
+    override fun returnItem() {
         TODO("Реализация returnItem()")
     }
 }
@@ -43,25 +63,25 @@ class Disk(id: Int, name: String, accessible: Boolean, private var type: Int) :
     override fun getInfo(): String =
         "${if (type == 0) "CD" else "DVD"} $name | Доступность: ${if (accessible) "да" else "нет"}"
 
-    override fun borrowItem(): String {
+    override fun borrowItem() {
         TODO("Реализация borrowItem()")
     }
 
-    override fun returnItem() : String {
+    override fun returnItem() {
         TODO("Реализация returnItem()")
     }
 }
 
 interface Borrowable {
-    fun borrowItem() : String
+    fun borrowItem()
 }
 
 interface ReadableInLibrary {
-    fun readInLibrary() : String
+    fun readInLibrary()
 }
 
 interface Returnable {
-    fun returnItem() : String
+    fun returnItem()
 }
 
 class LibraryManager(val libraryItemList: MutableList<LibraryItem>) {
