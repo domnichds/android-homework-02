@@ -93,11 +93,25 @@ interface Returnable {
 
 class LibraryManager(val libraryItemList: MutableList<LibraryItem>) {
     fun printList(type: Int) {
-        when (type) {
-            1 -> libraryItemList.filterIsInstance<Book>().forEach({ println(it.getInfo()) })
-            2 -> libraryItemList.filterIsInstance<Newspaper>().forEach({ println(it.getInfo()) })
-            3 -> libraryItemList.filterIsInstance<Disk>().forEach({ println(it.getInfo()) })
+        val list = when (type) {
+            1 -> libraryItemList.filterIsInstance<Book>()
+            2 -> libraryItemList.filterIsInstance<Newspaper>()
+            3 -> libraryItemList.filterIsInstance<Disk>()
+            else -> emptyList()
         }
+        list.forEachIndexed( {index, item ->
+            println("${index+1}. ${item.getOneLineInfo()}")
+        })
+    }
+
+    fun getItem(type: Int, index: Int): LibraryItem? {
+        val list = when (type) {
+            1 -> libraryItemList.filterIsInstance<Book>()
+            2 -> libraryItemList.filterIsInstance<Newspaper>()
+            3 -> libraryItemList.filterIsInstance<Disk>()
+            else -> emptyList()
+        }
+        return if (index in list.indices) list[index] else null
     }
 }
 
@@ -128,18 +142,39 @@ fun main() {
             break
         }
         else {
-            while(true) {
-                library.printList(mainChoice)
-                println("1 - Взять домой\n" +
-                        "2 - Читать в читальном зале\n" +
-                        "3 - Показать подробную информацию\n" +
-                        "4 - Вернуть\n" +
-                        "5 - Выйти")
-                        TODO("Остальная логика + сделать краше!!!")
-                }
+            library.printList(mainChoice)
+            print("Введите номер объекта: ")
+            val itemChoice = readlnOrNull()?.toIntOrNull()
+            val item = library.getItem(mainChoice, itemChoice?.minus(1) ?: -1)
+            if (item == null) {
+                println("Неверный выбор!")
+            }
+            else {
+                while (true) {
+                    println("1 - Взять домой\n" +
+                            "2 - Читать в читальном зале\n" +
+                            "3 - Показать подробную информацию\n" +
+                            "4 - Вернуть\n" +
+                            "5 - Выйти")
+                    val localChoice = readlnOrNull()?.toIntOrNull()
+                    if (localChoice == null || localChoice !in 1..5) {
+                        println("Неверный выбор!")
+                    } else {
+                        when (localChoice) {
+                            1 -> if (item is Borrowable) item.borrowItem() else println("Этот объект нельзя взать домой")
+                            2 -> if (item is ReadableInLibrary) item.readInLibrary()
+                            else println("Этот объект нельзя читать в зале")
+                            3 -> println(item.getInfo())
+                            4 -> if (item is Returnable) item.returnItem() else println("Этот объект нельзя вернуть")
+                            5 -> break
+                        }
 
+                    }
+                }
             }
         }
+    }
 }
+
 
 
