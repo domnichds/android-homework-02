@@ -31,15 +31,18 @@ class Book(id: Int, name: String, accessible: Boolean, private var numberOfPages
         "Книга: $name ($numberOfPages стр.) автора: $author с id: $id | Доступность: ${if (accessible) "да" else "нет"}"
 
     override fun borrowItem() {
-        toggleAccessibility("Книга $name взята домой", "Книга $name уже на руках")
+        toggleAccessibility("Книга $name взята домой",
+            "Книга $name уже на руках")
     }
 
     override fun readInLibrary() {
-        toggleAccessibility("Книга $name взята в читальный зал", "Книга $name уже на руках")
+        toggleAccessibility("Книга $name взята в читальный зал",
+            "Книга $name уже на руках")
     }
 
     override fun returnItem() {
-        marksAsAccessible("Книга $name возвращена в библиотеку", "Книга $name уже в библиотеке")
+        marksAsAccessible("Книга $name возвращена в библиотеку",
+            "Книга $name уже в библиотеке")
     }
 
 }
@@ -50,11 +53,13 @@ class Newspaper(id: Int, name: String, accessible: Boolean, private var issueNum
         "Выпуск: $issueNumber газеты $name с id: $id | Доступность: ${if (accessible) "да" else "нет"}"
 
     override fun readInLibrary() {
-        TODO("Реализация readInLibrary()")
+        toggleAccessibility("Газета $name №$issueNumber взята в читальный зал",
+            "Газета $name №$issueNumber уже на руках")
     }
 
     override fun returnItem() {
-        TODO("Реализация returnItem()")
+        marksAsAccessible("Газета $name №$issueNumber возращена в библиотеку",
+            "Газета $name №$issueNumber уже в библиотеке")
     }
 }
 
@@ -64,11 +69,13 @@ class Disk(id: Int, name: String, accessible: Boolean, private var type: Int) :
         "${if (type == 0) "CD" else "DVD"} $name | Доступность: ${if (accessible) "да" else "нет"}"
 
     override fun borrowItem() {
-        TODO("Реализация borrowItem()")
+        toggleAccessibility("${if (type == 0) "CD" else "DVD"} диск $name взят домой",
+            "${if (type == 0) "CD" else "DVD"} диск $name уже на руках")
     }
 
     override fun returnItem() {
-        TODO("Реализация returnItem()")
+        marksAsAccessible("${if (type == 0) "CD" else "DVD"} диск $name возращен в библиотеку",
+            "${if (type == 0) "CD" else "DVD"} диск $name уже в библиотеке")
     }
 }
 
