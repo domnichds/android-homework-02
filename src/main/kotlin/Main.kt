@@ -1,5 +1,17 @@
 package org.example
 
+interface Borrowable {
+    fun borrowItem()
+}
+
+interface ReadableInLibrary {
+    fun readInLibrary()
+}
+
+interface Returnable {
+    fun returnItem()
+}
+
 abstract class LibraryItem(var id: Int, var name: String, var accessible: Boolean) {
     fun getOneLineInfo(): String = "$name | Доступность: ${if (accessible) "да" else "нет"}"
     abstract fun getInfo(): String
@@ -77,18 +89,6 @@ class Disk(id: Int, name: String, accessible: Boolean, private var type: Int) :
         marksAsAccessible("${if (type == 0) "CD" else "DVD"} диск $name возращен в библиотеку",
             "${if (type == 0) "CD" else "DVD"} диск $name уже в библиотеке")
     }
-}
-
-interface Borrowable {
-    fun borrowItem()
-}
-
-interface ReadableInLibrary {
-    fun readInLibrary()
-}
-
-interface Returnable {
-    fun returnItem()
 }
 
 class LibraryManager(val libraryItemList: MutableList<LibraryItem>) {
@@ -175,6 +175,3 @@ fun main() {
         }
     }
 }
-
-
-
