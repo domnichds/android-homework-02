@@ -16,6 +16,7 @@ interface Returnable {
     fun returnItem()
 }
 
+// Перечисление для месяцев
 enum class Month(val russianName: String) {
     JANUARY("Январь"),
     FEBRUARY("Февраль"),
@@ -172,7 +173,8 @@ class InterfaceManager(private val library: LibraryManager) {
             "1 - Показать книги\n" +
                     "2 - Показать газеты\n" +
                     "3 - Показать диски\n" +
-                    "4 - Выйти"
+                    "4 - Менеджер по закупкам\n" +
+                    "5 - Выйти"
         )
     }
 
@@ -186,18 +188,26 @@ class InterfaceManager(private val library: LibraryManager) {
         )
     }
 
+    private fun showManagerMenu() {
+        println(
+            "1 - Купить книгу\n" +
+                    "2 - Купить диск\n" +
+                    "3 - Купить газету\n" +
+                    "4 - Выйти"
+        )
+    }
+
     fun mainMenu() {
         while (true) {
             showMainMenu()
             when (val mainChoice = readlnOrNull()?.toIntOrNull()) { // Выбор списка, который следует показать
                 null, !in 1..4 -> println("Неверный выбор!")
-                4 -> break // Завершаем цикл и соответственно всю программу
-                else -> {
-                    itemMenu(mainChoice)
+                in 1..3 -> itemMenu(mainChoice)
+                4 ->  managerMenu()
+                5 -> break // Завершаем цикл и соответственно всю программу
                 }
             }
         }
-    }
 
     private fun itemMenu(type: Int) {
         library.printList(type)
@@ -245,8 +255,40 @@ class InterfaceManager(private val library: LibraryManager) {
             else -> false
         }
     }
-}
 
+    private fun managerMenu() {
+        val manager = Manager()
+        while (true) {
+            showManagerMenu()
+            val choice = readlnOrNull()?.toIntOrNull()
+            when (choice) {
+                1 -> {
+                    val bookStore = BookStore()
+                    val boughtBook = manager.buy(bookStore)
+                    println("Книга успешно куплена! Подробности:\n${boughtBook.getInfo()}")
+                }
+
+                2 -> {
+                    val diskStore = DiskStore()
+                    val boughtDisk = manager.buy(diskStore)
+                    println("Диск успешно куплен! Подробности:\n${boughtDisk.getInfo()}")
+                }
+
+                3 -> {
+                    val newspaperStore = NewspaperStore()
+                    val boughtNewspaper = manager.buy(newspaperStore)
+                    println("Газета успешно куплена! Подробности:\n${boughtNewspaper.getInfo()}")
+                }
+
+                4 -> return
+                else -> {
+                    println("Неверный выбор!")
+                    return
+                }
+            }
+        }
+    }
+}
 fun main() {
     // Тестовый список объектов библиотеки
     val libraryItems = mutableListOf<LibraryItem>(
