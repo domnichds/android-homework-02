@@ -16,6 +16,25 @@ interface Returnable {
     fun returnItem()
 }
 
+enum class Month(val russianName: String) {
+    JANUARY("Январь"),
+    FEBRUARY("Февраль"),
+    MARCH("Март"),
+    APRIL("Апрель"),
+    MAY("Май"),
+    JUNE("Июнь"),
+    JULY("Июль"),
+    AUGUST("Август"),
+    SEPTEMBER("Сентябрь"),
+    OCTOBER("Октябрь"),
+    NOVEMBER("Ноябрь"),
+    DECEMBER("Декабрь");
+
+    override fun toString(): String {
+        return russianName
+    }
+}
+
 abstract class LibraryItem(var id: Int, var name: String, var accessible: Boolean) {
     // Метод для получения краткой информации об объекте
     fun getOneLineInfo(): String = "$name | Доступность: ${if (accessible) "да" else "нет"}"
@@ -72,10 +91,10 @@ class Book(id: Int, name: String, accessible: Boolean, private var numberOfPages
 
 }
 
-class Newspaper(id: Int, name: String, accessible: Boolean, private var issueNumber: Int) :
+class Newspaper(id: Int, name: String, accessible: Boolean, private var issueNumber: Int, private var monthOfPublication: Month) :
     LibraryItem(id, name, accessible), ReadableInLibrary, Returnable {
     override fun getInfo(): String =
-        "Выпуск: $issueNumber газеты $name с id: $id | Доступность: ${if (accessible) "да" else "нет"}"
+        "Выпуск: $issueNumber от месяца ${monthOfPublication.russianName} газеты $name с id: $id | Доступность: ${if (accessible) "да" else "нет"}"
 
     override fun readInLibrary() {
         toggleAccessibility(
@@ -232,10 +251,10 @@ fun main() {
     // Тестовый список объектов библиотеки
     val libraryItems = mutableListOf<LibraryItem>(
         Book(id = 1, name = "Преступление и наказание", accessible = true, numberOfPages = 500, author = "Федор Достоевский"),
-        Newspaper(id = 2, name = "Известия", accessible = true, issueNumber = 1525),
+        Newspaper(id = 2, name = "Известия", accessible = true, issueNumber = 1525, monthOfPublication = Month.MAY),
         Disk(id = 3, name = "Брат", accessible = true, type = 1),
         Book(id = 4, name = "Война и мир", accessible = true, numberOfPages = 1200, author = "Лев Толстой"),
-        Newspaper(id = 5, name = "Комсомольская правда", accessible = true, issueNumber = 1200),
+        Newspaper(id = 5, name = "Комсомольская правда", accessible = true, issueNumber = 1200, monthOfPublication = Month.JULY),
         Disk(id = 6, name = "Начало", accessible = true, type = 0),
         Book(id = 7, name = "Мастер и Маргарита", accessible = true, numberOfPages = 400, author = "Михаил Булгаков"),
         Disk(id = 8, name = "Зеркало", accessible = true, type = 1)
