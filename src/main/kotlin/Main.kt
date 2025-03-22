@@ -174,7 +174,8 @@ class InterfaceManager(private val library: LibraryManager) {
                     "2 - Показать газеты\n" +
                     "3 - Показать диски\n" +
                     "4 - Менеджер по закупкам\n" +
-                    "5 - Выйти"
+                    "5 - Кабинет оцифровки\n" +
+                    "6 - Выйти"
         )
     }
 
@@ -197,17 +198,26 @@ class InterfaceManager(private val library: LibraryManager) {
         )
     }
 
+    private fun showDigitizerMenu() {
+        println(
+            "1 - Оцифровать книгу\n" +
+                    "2 - Оцифровать газету\n" +
+                    "3 - Выйти"
+        )
+    }
+
     fun mainMenu() {
         while (true) {
             showMainMenu()
             when (val mainChoice = readlnOrNull()?.toIntOrNull()) { // Выбор списка, который следует показать
-                null, !in 1..4 -> println("Неверный выбор!")
+                null, !in 1..6 -> println("Неверный выбор!")
                 in 1..3 -> itemMenu(mainChoice)
-                4 ->  managerMenu()
-                5 -> break // Завершаем цикл и соответственно всю программу
-                }
+                4 -> managerMenu()
+                5 -> digitizerMenu()
+                6 -> break // Завершаем цикл и соответственно всю программу
             }
         }
+    }
 
     private fun itemMenu(type: Int) {
         library.printList(type)
@@ -230,7 +240,7 @@ class InterfaceManager(private val library: LibraryManager) {
     }
 
     // Метод работает с Item и возвращает true, если нужно выйти из цикла
-    private fun handleItemChoice(choice: Int, item: LibraryItem) : Boolean {
+    private fun handleItemChoice(choice: Int, item: LibraryItem): Boolean {
         return when (choice) {
             1 -> {
                 if (item is Borrowable) item.borrowItem()
@@ -267,24 +277,55 @@ class InterfaceManager(private val library: LibraryManager) {
                     val boughtBook = manager.buy(bookStore)
                     println("Книга успешно куплена! Подробности:\n${boughtBook.getInfo()}")
                 }
-
                 2 -> {
                     val diskStore = DiskStore()
                     val boughtDisk = manager.buy(diskStore)
                     println("Диск успешно куплен! Подробности:\n${boughtDisk.getInfo()}")
                 }
-
                 3 -> {
                     val newspaperStore = NewspaperStore()
                     val boughtNewspaper = manager.buy(newspaperStore)
                     println("Газета успешно куплена! Подробности:\n${boughtNewspaper.getInfo()}")
                 }
-
                 4 -> return
                 else -> {
                     println("Неверный выбор!")
                     return
                 }
+            }
+        }
+    }
+
+    private fun digitizerMenu() {
+        while (true) {
+            showDigitizerMenu()
+            val choice = readlnOrNull()?.toIntOrNull()
+            when (choice) {
+                1 -> {
+                    library.printList(1)
+                    val itemChoice = readlnOrNull()?.toIntOrNull()
+                    val item = library.getItem(1, itemChoice?.minus(1) ?: -1)
+                    if (item == null) {
+                        println("Неверный выбор")
+                    } else {
+                        val digitizer = Digitizer<Book>()
+                        val digitalBook = digitizer.digitalize(item)
+                        println("Успешно оцифрована книга ${item.name} на CD")
+                    }
+                }
+                2 -> {
+                    library.printList(2)
+                    val itemChoice = readlnOrNull()?.toIntOrNull()
+                    val item = library.getItem(2, itemChoice?.minus(1) ?: -1)
+                    if (item == null) {
+                        println("Неверный выбор")
+                    } else {
+                        val digitizer = Digitizer<Newspaper>()
+                        val digitalBook = digitizer.digitalize(item)
+                        println("Успешно оцифрована газета ${item.name} на CD")
+                    }
+                }
+                3 -> return
             }
         }
     }
