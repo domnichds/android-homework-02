@@ -330,6 +330,7 @@ class InterfaceManager(private val library: LibraryManager) {
         }
     }
 }
+
 fun main() {
     // Тестовый список объектов библиотеки
     val libraryItems = mutableListOf<LibraryItem>(

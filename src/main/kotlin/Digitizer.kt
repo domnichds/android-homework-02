@@ -1,5 +1,6 @@
 package org.example
 
+// Контрвариантный параметр, ограниченный сверху LibraryManager
 class Digitizer<in T: LibraryItem> {
     fun digitalize(item: LibraryItem?) : Disk {
         // Проверяем на null из-за особенностей LibraryItem
