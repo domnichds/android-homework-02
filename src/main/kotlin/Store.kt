@@ -1,7 +1,7 @@
 package org.example
 
 // Интерфейс для любого магазина, который обязывает магазин иметь метод sell
-interface Store<T> {
+interface Store<out T> {
     fun sell(): T
 }
 
